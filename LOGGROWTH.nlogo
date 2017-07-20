@@ -3,6 +3,9 @@ globals
   num-turtles
   turtle-size
   turtle-color
+
+  time
+  pop
 ]
 
 turtles-own []
@@ -86,7 +89,10 @@ to setup
     ]
   ]
 
+  set K grid-size * grid-size
   set num-turtles 4
+  set time [ 0 ]
+  set pop [ 4 ]
 
   output-print (word ticks " " count turtles)
 end
@@ -94,8 +100,18 @@ end
 to go
   expand
   tick
+  set time lput ticks time
+  set pop lput count turtles pop
   output-print (word ticks " " count turtles)
-  if not any? patches with [not any? turtles-here] [ stop ]
+  if not any? patches with [not any? turtles-here] [
+    let r (r1 K pop lput 0 diff pop)
+    let dP map [ _x -> r * _x ] (f K pop)
+    show r
+    set-current-plot "(3) Change in Pop. vs. Pop."
+    set-current-plot-pen "fit"
+    (foreach pop dP [ [a b] -> plotxy a b ])
+    stop
+  ]
 end
 
 to expand
@@ -115,15 +131,41 @@ to expand
     ]
   ]
 end
+
+to-report f [p x]
+  report map [ _x -> _x * (p - _x) ] x
+end
+
+to-report g [p x y]
+  let fx (f p x)
+  report (-1 * (dot y fx) ^ 2) / (dot fx fx)
+end
+
+to-report rss [p x y]
+  report (dot y y) + (g p x y)
+end
+
+to-report r1 [p x y]
+  let _x (f p x)
+  report (dot _x y) / (dot _x _x)
+end
+
+to-report diff [x]
+  report (map - but-first x but-last x)
+end
+
+to-report dot [x y]
+  report (reduce + (map * x y))
+end
 @#$#@#$#@
 GRAPHICS-WINDOW
 476
 24
-1066
-635
+1064
+613
 -1
 -1
-10.0
+11.6
 1
 10
 1
@@ -133,10 +175,10 @@ GRAPHICS-WINDOW
 0
 0
 1
--28
-29
--28
-29
+-24
+25
+-24
+25
 1
 1
 1
@@ -204,7 +246,7 @@ grid-size
 grid-size
 8
 100
-58
+50.0
 2
 1
 NIL
@@ -213,8 +255,8 @@ HORIZONTAL
 OUTPUT
 290
 43
-399
-233
+396
+161
 12
 
 BUTTON
@@ -251,6 +293,7 @@ false
 "set-plot-x-range 0 grid-size * grid-size" ""
 PENS
 "default" 1.0 2 -16777216 true "" "plotxy num-turtles (count turtles - num-turtles)"
+"fit" 1.0 0 -13345367 true "" ""
 
 SLIDER
 21
@@ -301,7 +344,7 @@ true
 false
 "set-plot-x-range 0 grid-size * grid-size" ""
 PENS
-"default" 1.0 2 -16777216 true "" "ifelse num-turtles = 0 \n[ plotxy 0 0 ]\n[ plotxy num-turtles ((count turtles - num-turtles) / num-turtles) ]"
+"default" 1.0 2 -16777216 true "" "ifelse num-turtles = 0\n[ plotxy 0 0 ]\n[ plotxy num-turtles ((count turtles - num-turtles) / num-turtles) ]"
 
 CHOOSER
 21
@@ -322,6 +365,17 @@ Time vs. Pop. size
 12
 0.0
 1
+
+INPUTBOX
+290
+170
+450
+230
+K
+2500.0
+1
+0
+Number
 
 @#$#@#$#@
 #Logistic Model ODD Description
@@ -688,9 +742,8 @@ false
 0
 Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
-
 @#$#@#$#@
-NetLogo 5.3.1
+NetLogo 6.0.1
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
@@ -706,7 +759,6 @@ true
 0
 Line -7500403 true 150 150 90 180
 Line -7500403 true 150 150 210 180
-
 @#$#@#$#@
 0
 @#$#@#$#@
