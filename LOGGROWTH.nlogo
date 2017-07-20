@@ -86,6 +86,8 @@ to setup
     ]
   ]
 
+  set num-turtles 4
+
   output-print (word ticks " " count turtles)
 end
 
@@ -209,10 +211,10 @@ NIL
 HORIZONTAL
 
 OUTPUT
-291
-24
-400
-238
+290
+43
+399
+233
 12
 
 BUTTON
@@ -248,7 +250,7 @@ true
 false
 "set-plot-x-range 0 grid-size * grid-size" ""
 PENS
-"default" 1.0 2 -16777216 true "" "plotxy count turtles (count turtles - num-turtles)"
+"default" 1.0 2 -16777216 true "" "plotxy num-turtles (count turtles - num-turtles)"
 
 SLIDER
 21
@@ -299,7 +301,7 @@ true
 false
 "set-plot-x-range 0 grid-size * grid-size" ""
 PENS
-"default" 1.0 2 -16777216 true "" "ifelse num-turtles = 0 \n[ plotxy 0 0 ]\n[ plotxy count turtles ((count turtles - num-turtles) / count turtles) ]"
+"default" 1.0 2 -16777216 true "" "ifelse num-turtles = 0 \n[ plotxy 0 0 ]\n[ plotxy num-turtles ((count turtles - num-turtles) / num-turtles) ]"
 
 CHOOSER
 21
@@ -310,6 +312,16 @@ init-state
 init-state
 "center" "corners" "random"
 0
+
+TEXTBOX
+291
+23
+441
+41
+Time vs. Pop. size
+12
+0.0
+1
 
 @#$#@#$#@
 #Logistic Model ODD Description
