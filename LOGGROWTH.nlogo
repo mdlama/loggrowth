@@ -1,4 +1,4 @@
-globals 
+globals
 [
   num-turtles
   turtle-size
@@ -18,46 +18,81 @@ end
 to setup
   clear-all
   reset-ticks
-  
+
   set turtle-size 0.8
   set turtle-color yellow
-  
+
   resize-world (1 - (grid-size / 2)) (grid-size / 2) (1 - (grid-size / 2)) (grid-size / 2)
   set-patch-size 580 / grid-size
-  
+
   ask patches
   [
     set pcolor ifelse-value ((pxcor + pycor) mod 2 = 1) [grey] [black]
   ]
-  
-  crt 1 [
-    setxy 0 0
-    set color turtle-color
-    set size turtle-size
+
+  if init-state = "center" [
+    crt 1 [
+      setxy 0 0
+      set color turtle-color
+      set size turtle-size
+    ]
+    crt 1 [
+      setxy 0 1
+      set color turtle-color
+      set size turtle-size
+    ]
+    crt 1 [
+      setxy 1 0
+      set color turtle-color
+      set size turtle-size
+    ]
+    crt 1 [
+      setxy 1 1
+      set color turtle-color
+      set size turtle-size
+    ]
   ]
-  crt 1 [
-    setxy 0 1
-    set color turtle-color
-    set size turtle-size
+
+  if init-state = "corners" [
+    crt 1 [
+      setxy min-pxcor min-pxcor
+      set color turtle-color
+      set size turtle-size
+    ]
+    crt 1 [
+      setxy min-pxcor max-pxcor
+      set color turtle-color
+      set size turtle-size
+    ]
+    crt 1 [
+      setxy max-pxcor min-pxcor
+      set color turtle-color
+      set size turtle-size
+    ]
+    crt 1 [
+      setxy max-pxcor max-pxcor
+      set color turtle-color
+      set size turtle-size
+    ]
   ]
-  crt 1 [
-    setxy 1 0
-    set color turtle-color
-    set size turtle-size
+
+  if init-state = "random" [
+    repeat 4 [
+      crt 1 [
+        setxy random-pxcor random-pycor
+        set color turtle-color
+        set size turtle-size
+      ]
+    ]
   ]
-  crt 1 [
-    setxy 1 1
-    set color turtle-color
-    set size turtle-size
-  ]
-    
+
   output-print (word ticks " " count turtles)
 end
 
 to go
   expand
-  tick  
-  output-print (word ticks " " count turtles)  
+  tick
+  output-print (word ticks " " count turtles)
   if not any? patches with [not any? turtles-here] [ stop ]
 end
 
@@ -65,7 +100,7 @@ to expand
   set num-turtles count turtles
 
   ask patches with [any? turtles-here]
-  [ 
+  [
     ask neighbors4 with [not any? turtles-here]
     [
       if random-float 1.0 < prob-grow
@@ -75,18 +110,18 @@ to expand
           set size turtle-size
         ]
       ]
-    ] 
+    ]
   ]
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
-247
-43
-837
-654
+476
+24
+1066
+635
 -1
 -1
-11.6
+10.0
 1
 10
 1
@@ -96,10 +131,10 @@ GRAPHICS-WINDOW
 0
 0
 1
--24
-25
--24
-25
+-28
+29
+-28
+29
 1
 1
 1
@@ -107,10 +142,10 @@ ticks
 30.0
 
 BUTTON
-17
-41
-83
-74
+19
+23
+85
+56
 Setup
 setup
 NIL
@@ -124,11 +159,11 @@ NIL
 1
 
 PLOT
-19
-281
-226
-456
-(A) Pop. size vs Time
+20
+273
+227
+457
+(1) Pop. size vs Time
 Time
 Population size
 0.0
@@ -142,10 +177,10 @@ PENS
 "default" 1.0 0 -16777216 true "" "plot count turtles"
 
 BUTTON
-91
-41
-154
-74
+93
+23
+156
+56
 Go
 go
 T
@@ -159,32 +194,32 @@ NIL
 1
 
 SLIDER
-19
-91
-52
-267
+21
+152
+228
+185
 grid-size
 grid-size
 8
 100
-8
+58
 2
 1
 NIL
-VERTICAL
+HORIZONTAL
 
 OUTPUT
-123
-92
-224
-267
+291
+24
+400
+238
 12
 
 BUTTON
-161
-41
-224
-74
+163
+23
+226
+56
 Step
 go
 NIL
@@ -202,7 +237,7 @@ PLOT
 463
 227
 654
-(B) Change in Pop. vs. Pop.
+(3) Change in Pop. vs. Pop.
 Population size
 Change in pop. size
 0.0
@@ -216,19 +251,65 @@ PENS
 "default" 1.0 2 -16777216 true "" "plotxy count turtles (count turtles - num-turtles)"
 
 SLIDER
-69
-91
-102
-267
+21
+198
+229
+231
 prob-grow
 prob-grow
-0
-1
+0.1
+0.8
 0.1
 0.05
 1
 NIL
-VERTICAL
+HORIZONTAL
+
+PLOT
+235
+273
+451
+457
+(2) Change in Pop. vs. Time
+Time
+Change in pop. size
+0.0
+10.0
+0.0
+10.0
+true
+false
+"" ""
+PENS
+"default" 1.0 2 -16777216 true "" "plotxy ticks (count turtles - num-turtles)"
+
+PLOT
+236
+463
+450
+654
+(4) Rel. Pop. change vs. Pop.
+Population size
+Rel. Pop. change
+0.0
+10.0
+0.0
+0.1
+true
+false
+"set-plot-x-range 0 grid-size * grid-size" ""
+PENS
+"default" 1.0 2 -16777216 true "" "ifelse num-turtles = 0 \n[ plotxy 0 0 ]\n[ plotxy count turtles ((count turtles - num-turtles) / count turtles) ]"
+
+CHOOSER
+21
+90
+159
+135
+init-state
+init-state
+"center" "corners" "random"
+0
 
 @#$#@#$#@
 #Logistic Model ODD Description
@@ -257,7 +338,7 @@ The _grid-size_ is initialized to 8 x 8 upon startup.  The _prob-grow_ is initia
 The environment is assumed to be constant, so the model has no input data.
 
 ##Submodels
-The birth and spreading submodel defines exactly how turtles give birth and spread to neighboring patches. "Give birth and spread" corresponds to the simple creation of a new turtle in a neighboring patch.  “Neighboring patches” are the four patches surrounding the turtle’s current patch (N, S, E, and W). 
+The birth and spreading submodel defines exactly how turtles give birth and spread to neighboring patches. "Give birth and spread" corresponds to the simple creation of a new turtle in a neighboring patch.  “Neighboring patches” are the four patches surrounding the turtle’s current patch (N, S, E, and W).
 
 On each time step, each unoccupied neighbor patch of a turtle is colonized with probability _prob-grow_.  A random number from a uniform distribution between 0.0 and 1.0 . If this random number is less than _prob-grow_, that neighbor patch is colonized.
 
@@ -597,7 +678,7 @@ Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 
 @#$#@#$#@
-NetLogo 5.1.0
+NetLogo 5.3.1
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
