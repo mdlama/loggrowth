@@ -161,11 +161,11 @@ end
 GRAPHICS-WINDOW
 476
 24
-1064
-613
+1059
+608
 -1
 -1
-11.6
+5.8
 1
 10
 1
@@ -175,10 +175,10 @@ GRAPHICS-WINDOW
 0
 0
 1
--24
-25
--24
-25
+-49
+50
+-49
+50
 1
 1
 1
@@ -246,7 +246,7 @@ grid-size
 grid-size
 8
 100
-50.0
+100.0
 2
 1
 NIL
@@ -354,7 +354,7 @@ CHOOSER
 init-state
 init-state
 "center" "corners" "random"
-0
+2
 
 TEXTBOX
 291
@@ -372,38 +372,38 @@ INPUTBOX
 450
 230
 K
-2500.0
+10000.0
 1
 0
 Number
 
 @#$#@#$#@
-#Logistic Model ODD Description
+# Logistic Model ODD Description
 This file describes a model of logistic growth.  The initial idea came from Glenn Ledder at the October 2016 NIMBioS Quantitative Biology Working Group.
 
-##Purpose
+## Purpose
 The model was designed to explore questions about logistic growth - in particular, to understand the growth of individuals in an environment with limited resources and size. The purpose is mainly for classroom use as an experiential model whereby students run simluations, visualize output, and then construct the discrete logistic growth map from the results.
 
-##Entities, State Variables, and Scales
+## Entities, State Variables, and Scales
 The model has two kinds of entities: turtles and patches of empty land. The patches make up a square grid landscape of patches in a checkerboard pattern. Turtles are characterized only by their location, described as the patch they are on. Therefore, turtle locations are in discrete units, the x- and y- coordinates of the center of their patch. Patch size and the length of one time step in the simulation are not specified because the model is generic. Simulations go until the entire board is full; the length of one time step is not specified.
 
-##Process Overview and Scheduling
+## Process Overview and Scheduling
 There is only one process in the model: birth and spread of the turtles to neighboring patches. On each time step, each turtle spreads to neighboring patches. The order in which the turtles execute this action is unimportant.
 
-##Design Concepts
+## Design Concepts
 The model does not include direct _interaction_ among turtles.  Instead, interaction is implicit in that turtles are unable to spread to occupied neighboring patches.
 
 _Stochasticity_ is used to represent random birth and spreading into neighboring patches.
 
 To observe the population dynamics, two plots are updated:  (1) a plot of number of turtles as a function of time (ticks), and (2) a plot of the population change as a function of current population size.
 
-##Initialization
+## Initialization
 The _grid-size_ is initialized to 8 x 8 upon startup.  The _prob-grow_ is initialized to 0.1 upon startup.  The turtles are initialized by creating four of them in the center of the region.
 
-##Input Data
+## Input Data
 The environment is assumed to be constant, so the model has no input data.
 
-##Submodels
+## Submodels
 The birth and spreading submodel defines exactly how turtles give birth and spread to neighboring patches. "Give birth and spread" corresponds to the simple creation of a new turtle in a neighboring patch.  “Neighboring patches” are the four patches surrounding the turtle’s current patch (N, S, E, and W).
 
 On each time step, each unoccupied neighbor patch of a turtle is colonized with probability _prob-grow_.  A random number from a uniform distribution between 0.0 and 1.0 . If this random number is less than _prob-grow_, that neighbor patch is colonized.
@@ -743,7 +743,7 @@ false
 Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 @#$#@#$#@
-NetLogo 6.0.1
+NetLogo 6.1.1
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
